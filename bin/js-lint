@@ -1,0 +1,29 @@
+#!/bin/bash
+currBranch=$(git symbolic-ref --short HEAD)
+files=$(git diff HEAD  remotes/origin/$currBranch  --stat --name-only --diff-filter=ACMR -- 'src/*.js')
+
+if test ${#files} -gt 0
+    then
+        clear && echo -e "\033[32m  \n 🔍  🔍  🔍  开始校验js... \033[0m"
+        PASS=true
+
+        for file in $files
+            do
+                ./node_modules/eslint/bin/eslint.js $file --cache
+                if [[ "$?" == 1 ]]; then
+                    PASS=false
+                fi
+            done
+
+        if ! $PASS; then
+            echo -e "\033[31m \n 🚫  🚫  🚫   eslint校验不通过 \n  \033[0m"
+            exit 1
+        else
+            echo -e "\033[32m \n ✅  ✅  ✅   eslint校验通过 \n    \033[0m"
+        fi
+
+    else
+        echo -e "\033[32m   \n 🔔  🔔  🔔   没有js文件需要检查 \n   \033[0m"
+fi
+
+exit 0
