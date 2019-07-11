@@ -1,0 +1,9 @@
+#!/bin/bash
+currBranch=$(git branch -vv | grep  $(git symbolic-ref --short HEAD) | grep origin)
+
+if test ${#currBranch} -eq $[0]; then
+    echo -e "\033[31m \n 🚫  🚫  🚫   当前分支没有关联远程分支，请先把当前分支推送到远程分支！ \n  \033[0m"
+    exit 1;
+else
+    exit 0;
+fi

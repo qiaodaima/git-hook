@@ -23,7 +23,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "",
+      "pre-commit": "./bin/heck-branch",
       "pre-push": "./bin/js-lint"
     }
   }
