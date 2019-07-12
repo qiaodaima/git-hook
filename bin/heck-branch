@@ -3,7 +3,7 @@ currBranch=$(git branch -vv | grep  $(git symbolic-ref --short HEAD) | grep orig
 
 if test ${#currBranch} -eq $[0]; then
     echo -e "\033[31m \n 🚫  🚫  🚫   当前分支没有关联远程分支，请先把当前分支推送到远程分支！ \n  \033[0m"
-    echo -e "\033[32m \n ✅  ✅  ✅   可使用 git push --set-upstream origin 你当前的分支名 来关联到远程分支\n    \033[0m"
+    echo -e "\033[32m \n    可使用 git push --set-upstream origin 你当前的分支名 来关联到远程分支\n    \033[0m"
     exit 1;
 else
     exit 0;
