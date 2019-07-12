@@ -1,6 +1,6 @@
 
 ### 这个是干嘛的？
-> 在git push阶段，对js文件进行校验
+> 校验commit message格式规范，以及在git push阶段，对相应js文件进行校验
 
 ### 为什么不在commit阶段进行校验？
 > git是分布式的概念，本地怎么开发是个人的自由，我不希望在本地开发阶段去破坏大家原有的开发习惯，因此只在push阶段进行代码校验
@@ -22,13 +22,14 @@
 
 ### 怎么用前端的姿势来实现？
 ```
-// husky 用于设置本地的 git 钩子
 npm install --save-dev eslint husky
+npm install -g @commitlint/cli @commitlint/config-conventional
 
-// 之后在项目根目录创建bin文件夹，分别写2个shell脚本，
-// 需要赋予可执行权限，形如 chmod 755 ./bin/js-lint
+// 注解：
+// husky 用于设置本地的 git 钩子
+// commitlint 用于校验 commit message格式规范
+// 之后在项目根目录创建bin文件夹，分别写2个shell脚本，记得赋予可执行权限，形如 chmod 755 ./bin/js-lint
 ```
-
 
 **package.json**
 ```
@@ -36,6 +37,7 @@ npm install --save-dev eslint husky
     ...
     "husky": {
         "hooks": {
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
             "pre-commit": "./bin/heck-branch",
             "pre-push": "./bin/js-lint"
         }
@@ -50,7 +52,7 @@ currBranch=$(git branch -vv | grep  $(git symbolic-ref --short HEAD) | grep orig
 
 if test ${#currBranch} -eq $[0]; then
     echo -e "\033[31m \n 🚫  🚫  🚫   当前分支没有关联远程分支，请先把当前分支推送到远程分支！ \n  \033[0m"
-    echo -e "\033[32m \n ✅  ✅  ✅   可使用 git push --set-upstream origin 你当前的分支名 来关联到远程分支\n    \033[0m"
+    echo -e "\033[32m \n 可使用 git push --set-upstream origin 你当前的分支名 来关联到远程分支\n    \033[0m"
     exit 1;
 else
     exit 0;
@@ -88,5 +90,4 @@ if test ${#files} -gt 0
 fi
 
 exit 0
-
 ```
